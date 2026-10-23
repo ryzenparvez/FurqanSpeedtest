@@ -1,0 +1,22 @@
+# /etc/systemd/system/furqancloud-speedtest.service
+[Unit]
+Description=FurqanCloud Speed Test server
+After=network.target
+
+[Service]
+Type=simple
+User=speedtest
+WorkingDirectory=/opt/furqancloud-speedtest
+ExecStart=/usr/bin/node server.js
+Restart=always
+RestartSec=3
+LimitNOFILE=65535
+Environment=PORT=3000
+Environment=HOST=127.0.0.1
+Environment=TRUST_PROXY=1
+Environment=SERVER_NAME=FurqanCloud · Main
+Environment=SERVER_LOCATION=Dhaka, BD
+Environment=ALLOWED_ORIGIN=*
+
+[Install]
+WantedBy=multi-user.target
