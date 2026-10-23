@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FurqanCloud Speed Test</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--cream:#FFFDEE;--mint:#E2FBCE;--lime:#E3EF26;--forest:#076653;--deep:#0C342C;--night:#06231D;--mut:#5a7a70;--sh:0 10px 30px rgba(7,102,83,.09)}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;font:500 15px/1.45 Manrope,system-ui,"Segoe UI",sans-serif;color:var(--night);
+background:radial-gradient(520px 420px at 6% 6%,rgba(227,239,38,.35),transparent 70%),radial-gradient(640px 520px at 98% 2%,rgba(7,102,83,.22),transparent 70%),radial-gradient(520px 420px at 92% 100%,rgba(12,52,44,.14),transparent 70%),var(--cream);background-attachment:fixed}
+.wrap{max-width:1120px;margin:0 auto;padding:24px 20px 48px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:26px}
+.brand{display:flex;align-items:center;gap:12px}
+.logo{width:44px;height:44px;border-radius:50%;background:var(--deep);display:grid;place-items:center}
+h1{margin:0;font-size:26px;line-height:1.1;font-weight:800;letter-spacing:-.02em}
+.brand-t small{display:block;margin-top:3px;font-size:13px;font-weight:600;color:var(--mut);letter-spacing:.01em}
+h2{margin:0;font-size:18px;font-weight:800}
+.pill{display:flex;gap:6px;background:var(--deep);padding:6px;border-radius:999px}
+.pill button{border:0;background:transparent;color:#bfe3d2;font-family:inherit;font-weight:700;font-size:14px;padding:10px 24px;border-radius:999px;cursor:pointer}
+.pill button[aria-selected=true]{background:var(--lime);color:var(--night)}
+button:focus-visible{outline:3px solid var(--forest);outline-offset:3px}
+.grid{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:22px;align-items:start}
+.card{background:rgba(255,255,255,.82);border-radius:28px;padding:22px;box-shadow:var(--sh)}
+.gauge-card{display:flex;flex-direction:column;align-items:center;padding:26px 22px 30px}
+#gauge{width:100%;max-width:430px}
+#gauge text{font-family:Manrope,system-ui,sans-serif}
+#phase{margin:2px 0 16px;color:var(--mut);font-weight:600;min-height:22px;text-align:center}
+.go{border:0;cursor:pointer;font-family:inherit;font-weight:800;font-size:17px;padding:16px 52px;border-radius:999px;background:var(--deep);color:var(--lime);box-shadow:0 10px 24px rgba(12,52,44,.28);transition:transform .15s}
+.go:hover{transform:translateY(-2px)}.go:disabled{opacity:.6;cursor:default;transform:none}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.stat{background:#fff;border-radius:24px;padding:16px 16px 12px;box-shadow:var(--sh)}
+.stat .l{display:flex;align-items:center;gap:8px;color:var(--mut);font-weight:600}
+.ic{width:30px;height:30px;border-radius:50%;background:var(--mint);color:var(--forest);display:grid;place-items:center;font-size:14px;font-weight:800}
+.stat b{display:block;font-size:28px;font-weight:800;margin:8px 0 2px;letter-spacing:-.02em}
+.stat b small{font-size:14px;font-weight:600;color:var(--mut);margin-left:4px}
+.stat canvas{width:100%;aspect-ratio:300/70;display:block}
+.stat.dl{background:linear-gradient(150deg,var(--forest),var(--deep));color:#fff}
+.stat.dl .l,.stat.dl b small{color:#bfe3d2}.stat.dl .ic{background:rgba(227,239,38,.22);color:var(--lime)}
+.conn dl{display:grid;grid-template-columns:1fr 1fr;gap:16px 20px;margin:16px 0 0}
+.conn dt{color:var(--mut);font-size:13px;font-weight:600}
+.conn dd{margin:2px 0 0;font-weight:700;overflow-wrap:anywhere}
+.conn .w{grid-column:span 2}.conn .big{font-size:20px;font-weight:800}
+.tag{display:inline-block;background:var(--mint);color:var(--forest);border-radius:999px;padding:1px 10px;font-size:12px;font-weight:700;margin-left:8px;vertical-align:middle}
+.note{margin:18px 0 0;color:var(--mut);font-size:13px}
+.hist{list-style:none;margin:16px 0 0;padding:0}
+.hist li{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:14px 0;border-bottom:1px solid var(--mint)}
+.hist li:last-child{border:0}.hist small{display:block;color:var(--mut)}
+.ms{font-weight:800;white-space:nowrap}.ms i{display:inline-flex;gap:2px;align-items:flex-end;margin-left:6px;vertical-align:middle}
+.ms i s{display:block;width:4px;border-radius:2px;background:currentColor;text-decoration:none}
+.clear{border:0;background:var(--mint);color:var(--forest);font-family:inherit;font-weight:700;border-radius:999px;padding:8px 18px;cursor:pointer}
+.row{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.srv-row{display:flex;gap:10px;align-items:center;margin-top:4px}
+.srv-row select{flex:1;min-width:0;appearance:none;border:2px solid var(--mint);background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none' stroke='%23076653' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='M1 1l5 5 5-5'/%3E%3C/svg%3E") no-repeat right 14px center;color:var(--night);font:700 14px Manrope,system-ui,sans-serif;padding:10px 38px 10px 14px;border-radius:14px;cursor:pointer}
+.srv-row select:disabled{opacity:.6;cursor:default}
+select:focus-visible{outline:3px solid var(--forest);outline-offset:2px}
+.srv-ms{font-weight:800;color:var(--forest);white-space:nowrap;font-size:13px}
+.foot{margin-top:34px;padding-top:18px;border-top:1px solid rgba(7,102,83,.18);display:flex;justify-content:space-between;gap:10px 20px;flex-wrap:wrap;color:var(--mut);font-size:13px;font-weight:600}
+.foot b{color:var(--forest);font-weight:800}
+@media(max-width:900px){.grid{grid-template-columns:1fr}}
+@media(max-width:420px){.stat b{font-size:23px}.conn .big{font-size:17px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <div class="brand">
+      <div class="logo" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#E3EF26" stroke-width="2.4" stroke-linecap="round"><path d="M4 17a9 9 0 1 1 16 0"/><path d="M12 14l4-5"/></svg></div>
+      <div class="brand-t"><h1>FurqanCloud</h1><small>Speed Test</small></div>
+    </div>
+    <div class="pill" role="tablist" aria-label="Views">
+      <button role="tab" id="tab-test" aria-selected="true">Test</button>
+      <button role="tab" id="tab-hist" aria-selected="false">History</button>
+    </div>
+  </div>
+
+  <div id="view-test" class="grid">
+    <section class="card gauge-card" aria-label="Speed gauge">
+      <svg id="gauge" viewBox="0 0 400 400" role="img" aria-label="Speed gauge">
+        <defs>
+          <linearGradient id="gg" gradientUnits="userSpaceOnUse" x1="50" y1="340" x2="350" y2="60"><stop offset="0" stop-color="#0C342C"/><stop offset=".5" stop-color="#076653"/><stop offset="1" stop-color="#E3EF26"/></linearGradient>
+          <radialGradient id="halo"><stop offset="0" stop-color="#076653" stop-opacity=".3"/><stop offset="1" stop-color="#076653" stop-opacity="0"/></radialGradient>
+        </defs>
+        <path id="track" fill="none" stroke="#E2FBCE" stroke-width="26" stroke-linecap="round"/>
+        <path id="prog" fill="none" stroke="url(#gg)" stroke-width="26" stroke-linecap="round"/>
+        <g id="labels" font-size="14" font-weight="700" fill="#06231D" text-anchor="middle"></g>
+        <circle cx="200" cy="200" r="100" fill="none" stroke="#E2FBCE" stroke-width="12"/>
+        <circle cx="200" cy="200" r="62" fill="url(#halo)"/>
+        <g id="needle"><polygon points="0,-6 104,0 0,6" fill="#076653"/></g>
+        <circle cx="200" cy="200" r="22" fill="#076653"/><circle cx="200" cy="200" r="8" fill="#E3EF26"/>
+        <text id="rv" x="200" y="264" text-anchor="middle" font-size="30" font-weight="800" fill="#06231D">0.00</text>
+        <text x="200" y="284" text-anchor="middle" font-size="13" font-weight="600" fill="#5a7a70">Mbps</text>
+      </svg>
+      <div id="phase" aria-live="polite">Ready to test</div>
+      <button class="go" id="go">Start test</button>
+    </section>
+
+    <div>
+      <div class="stats">
+        <div class="stat dl"><div class="l"><span class="ic">↓</span>Download</div><b><span id="v-dl">0.00</span><small>Mbps</small></b><canvas id="s-dl" width="300" height="70"></canvas></div>
+        <div class="stat"><div class="l"><span class="ic">↑</span>Upload</div><b><span id="v-ul">0.00</span><small>Mbps</small></b><canvas id="s-ul" width="300" height="70"></canvas></div>
+        <div class="stat"><div class="l">Ping</div><b><span id="v-ping">0</span><small>ms</small></b><canvas id="s-ping" width="300" height="70"></canvas></div>
+        <div class="stat"><div class="l">Jitter</div><b><span id="v-jit">0</span><small>ms</small></b><canvas id="s-jit" width="300" height="70"></canvas></div>
+      </div>
+
+      <section class="card conn" aria-label="Your connection">
+        <h2>Your connection</h2>
+        <dl>
+          <div class="w"><dt>ISP</dt><dd class="big" id="i-isp">Detecting…</dd></div>
+          <div class="w"><dt>IP address</dt><dd class="big"><span id="i-ip">Detecting…</span><span class="tag" id="i-ver" hidden></span></dd></div>
+          <div><dt>ASN</dt><dd id="i-asn">–</dd></div>
+          <div><dt>Location</dt><dd id="i-loc">–</dd></div>
+          <div class="w"><dt><label for="srv">Test server</label></dt><dd class="srv-row"><select id="srv" aria-label="Test server"><option>Finding servers…</option></select><span class="srv-ms" id="srv-ms"></span></dd></div>
+          <div class="w"><dt>Browser</dt><dd id="i-sys">–</dd></div>
+        </dl>
+        <p class="note" id="note">Speeds are measured between your device and the selected test server. “Auto” picks the server with the lowest ping.</p>
+      </section>
+    </div>
+  </div>
+
+  <section id="view-hist" class="card" hidden>
+    <div class="row"><h2>Past results</h2><button class="clear" id="clear">Clear history</button></div>
+    <ul class="hist" id="hist"></ul>
+  </section>
+
+  <footer class="foot">
+    <span>&copy; <span id="yr">2026</span> <b>FurqanCloud</b>. All rights reserved.</span>
+    <span>FurqanCloud Speed Test</span>
+  </footer>
+</div>
+
+<script>
+/* ===== Settings: test servers =====
+   Every server must expose the same 4 paths (server.js in this package does):
+     GET  /__down?bytes=N   download payload      POST /__up   upload sink
+     GET  /__ping           tiny reply (latency)  GET  /meta   client info
+   base '' = the server this page is served from. Add more nodes to the list below. */
+const SERVERS = [
+  { id: 'fc-main', name: 'FurqanCloud · Main',  base: '' },
+  // { id: 'fc-sg',  name: 'FurqanCloud · Singapore', base: 'https://sg.speed.furqancloud.com' },
+  // { id: 'fc-eu',  name: 'FurqanCloud · Frankfurt', base: 'https://eu.speed.furqancloud.com' },
+  { id: 'cf',      name: 'Cloudflare · Global', base: 'https://speed.cloudflare.com' }
+];
+const META_URL = 'https://speed.cloudflare.com/meta';   // client IP / ISP lookup
+let cur = SERVERS[SERVERS.length - 1];                   // active server (set by picker)
+const CONFIG = {
+  down: bytes => `${cur.base}/__down?bytes=${bytes}&r=${Math.random()}`,
+  up: () => `${cur.base}/__up?r=${Math.random()}`,
+  ping: () => `${cur.base}/__down?bytes=0&r=${Math.random()}`,
+  seconds: 8
+};
+
+const $ = id => document.getElementById(id), sleep = ms => new Promise(r => setTimeout(r, ms));
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+/* ===== Gauge ===== */
+const TICKS = [0,5,10,20,30,50,75,100,250,500,1000], C = 200, A0 = 135, SW = 270;
+const toAngle = v => {
+  const i = TICKS.findIndex(t => t >= v); if (i < 0) return A0 + SW; if (i === 0) return A0;
+  return A0 + ((i - 1 + (v - TICKS[i-1]) / (TICKS[i] - TICKS[i-1])) / (TICKS.length - 1)) * SW;
+};
+const pt = (a, r) => [C + r * Math.cos(a * Math.PI / 180), C + r * Math.sin(a * Math.PI / 180)];
+const arc = (a1, a2, r) => { const [x1,y1] = pt(a1,r), [x2,y2] = pt(a2,r); return `M${x1} ${y1}A${r} ${r} 0 ${a2-a1>180?1:0} 1 ${x2} ${y2}`; };
+$('track').setAttribute('d', arc(A0, A0 + SW, 170));
+$('labels').innerHTML = TICKS.map((t, i) => { const [x,y] = pt(A0 + i / (TICKS.length - 1) * SW, 134); return `<text x="${x}" y="${y+5}">${t === 1000 ? '1G' : t}</text>`; }).join('');
+
+let shown = 0, target = 0;
+const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
+(function frame() {
+  shown += (target - shown) * (calm ? 1 : .14); if (Math.abs(target - shown) < .01) shown = target;
+  const a = toAngle(shown);
+  $('needle').setAttribute('transform', `translate(200 200) rotate(${a})`);
+  $('prog').setAttribute('d', shown > .05 ? arc(A0, Math.max(a, A0 + 1), 170) : '');
+  requestAnimationFrame(frame);
+})();
+const setSpeed = v => { target = v; $('rv').textContent = v.toFixed(2); };
+
+/* ===== Sparklines ===== */
+function spark(id, data, color = '#076653') {
+  const c = $(id), x = c.getContext('2d'), w = c.width, h = c.height; x.clearRect(0, 0, w, h);
+  if (data.length < 2) return;
+  const d = data.slice(-60), max = Math.max(...d) * 1.15 || 1, p = i => [i / (d.length - 1) * w, h - 4 - d[i] / max * (h - 12)];
+  const g = x.createLinearGradient(0, 0, 0, h); g.addColorStop(0, color + '55'); g.addColorStop(1, color + '00');
+  x.beginPath(); d.forEach((_, i) => { const [px, py] = p(i); i ? x.lineTo(px, py) : x.moveTo(px, py); });
+  x.lineWidth = 3; x.lineJoin = 'round'; x.strokeStyle = color; x.stroke();
+  x.lineTo(w, h); x.lineTo(0, h); x.fillStyle = g; x.fill();
+}
+const clearSparks = () => ['s-dl','s-ul','s-ping','s-jit'].forEach(i => { const c = $(i); c.getContext('2d').clearRect(0, 0, c.width, c.height); });
+
+/* ===== Connection info (ISP, IP, ...) ===== */
+function browserName() {
+  const u = navigator.userAgent;
+  const b = (u.match(/(Edg|OPR|Firefox|Chrome|Version)\/(\d+)/) || []), n = { Edg:'Edge', OPR:'Opera', Version:'Safari' }[b[1]] || b[1] || 'Browser';
+  const os = /Windows/.test(u) ? 'Windows' : /Android/.test(u) ? 'Android' : /iPhone|iPad/.test(u) ? 'iOS' : /Mac/.test(u) ? 'macOS' : /Linux/.test(u) ? 'Linux' : '';
+  return `${n} ${b[2] || ''}${os ? ' · ' + os : ''}`.trim();
+}
+let info = {};
+async function loadInfo() {
+  $('i-sys').textContent = browserName();
+  try {
+    const m = await (await fetch(META_URL)).json();
+    let country = m.country; try { country = new Intl.DisplayNames(['en'], { type: 'region' }).of(m.country); } catch (e) {}
+    info = { isp: m.asOrganization, ip: m.clientIp, asn: m.asn ? 'AS' + m.asn : '', loc: [m.city, country].filter(Boolean).join(', ') };
+  } catch (e) {}
+  if (!info.ip) try {
+    const j = await (await fetch('https://ipwho.is/')).json();
+    info = { isp: j.connection?.isp || j.connection?.org, ip: j.ip, asn: j.connection?.asn ? 'AS' + j.connection.asn : '', loc: [j.city, j.country].filter(Boolean).join(', ') };
+  } catch (e) {}
+  $('i-isp').textContent = info.isp || 'Unavailable';
+  $('i-ip').textContent = info.ip || 'Unavailable';
+  if (info.ip) { $('i-ver').hidden = false; $('i-ver').textContent = info.ip.includes(':') ? 'IPv6' : 'IPv4'; }
+  $('i-asn').textContent = info.asn || '–'; $('i-loc').textContent = info.loc || '–';
+}
+
+/* ===== Measurements ===== */
+function meter(ms, get, onSample) {
+  return new Promise(resolve => {
+    const hist = [], t0 = performance.now();
+    const id = setInterval(() => {
+      const t = performance.now() - t0, b = get(); hist.push([t, b]);
+      const old = hist.find(p => p[0] >= t - 1000) || hist[0];
+      onSample(t > old[0] ? (b - old[1]) / (t - old[0]) * 8 / 1000 : 0);
+      if (t >= ms) { clearInterval(id); const w = hist.find(p => p[0] >= 1000) || hist[0]; resolve((b - w[1]) / (t - w[0]) * 8 / 1000); }
+    }, 200);
+  });
+}
+
+async function testPing() {
+  const t = [];
+  for (let i = 0; i < 16; i++) {
+    const s = performance.now(); await fetch(CONFIG.ping(), { cache: 'no-store' }); const d = performance.now() - s;
+    if (i) { t.push(d); $('v-ping').textContent = d.toFixed(0); spark('s-ping', t); }
+    await sleep(60);
+  }
+  const ping = t.reduce((a, b) => a + b) / t.length, jit = t.slice(1).reduce((a, v, i) => a + Math.abs(v - t[i]), 0) / (t.length - 1);
+  $('v-ping').textContent = ping.toFixed(0); $('v-jit').textContent = jit.toFixed(1);
+  spark('s-jit', t.slice(1).map((v, i) => Math.abs(v - t[i])));
+  return { ping, jit };
+}
+
+async function testDown() {
+  const ac = new AbortController(), s = []; let bytes = 0;
+  const worker = async () => { while (!ac.signal.aborted) { try {
+    const rd = (await fetch(CONFIG.down(25e6), { cache: 'no-store', signal: ac.signal })).body.getReader();
+    for (;;) { const { done, value } = await rd.read(); if (done) break; bytes += value.length; }
+  } catch (e) { if (ac.signal.aborted) return; await sleep(300); } } };
+  for (let i = 0; i < 4; i++) worker();
+  const avg = await meter(CONFIG.seconds * 1000, () => bytes, v => { setSpeed(v); s.push(v); $('v-dl').textContent = v.toFixed(2); spark('s-dl', s, '#E3EF26'); });
+  ac.abort(); $('v-dl').textContent = avg.toFixed(2); return avg;
+}
+
+async function testUp() {
+  const blob = new Blob([new Uint8Array(4 << 20)]), live = new Set(), s = []; let total = 0, stop = false;
+  const worker = async () => { while (!stop) await new Promise(done => {
+    const x = new XMLHttpRequest(); let prev = 0; live.add(x);
+    x.open('POST', CONFIG.up()); x.upload.onprogress = e => { total += e.loaded - prev; prev = e.loaded; };
+    x.onloadend = () => { live.delete(x); done(); }; x.send(blob);
+  }); };
+  for (let i = 0; i < 3; i++) worker();
+  const avg = await meter(CONFIG.seconds * 1000, () => total, v => { setSpeed(v); s.push(v); $('v-ul').textContent = v.toFixed(2); spark('s-ul', s); });
+  stop = true; live.forEach(x => x.abort()); $('v-ul').textContent = avg.toFixed(2); return avg;
+}
+
+/* ===== Run ===== */
+let running = false;
+async function start() {
+  if (running) return; running = true; $('go').disabled = true; $('srv').disabled = true;
+  ['v-dl','v-ul'].forEach(i => $(i).textContent = '0.00'); ['v-ping','v-jit'].forEach(i => $(i).textContent = '0'); clearSparks(); setSpeed(0);
+  try {
+    $('phase').textContent = 'Checking ping…'; const { ping, jit } = await testPing();
+    $('phase').textContent = 'Testing download…'; const dl = await testDown(); if (!dl) throw new Error('No data received');
+    setSpeed(0); await sleep(500);
+    $('phase').textContent = 'Testing upload…'; const ul = await testUp(); setSpeed(0);
+    $('phase').textContent = 'Test complete';
+    saveResult({ t: Date.now(), dl, ul, ping, jit, isp: info.isp, ip: info.ip, srv: cur.name });
+  } catch (e) { setSpeed(0); $('phase').textContent = 'Could not reach the test server. Check your connection and try again.'; }
+  $('go').textContent = 'Test again'; $('go').disabled = false; $('srv').disabled = false; running = false;
+}
+$('go').addEventListener('click', start);
+
+/* ===== History (stored in this browser) ===== */
+const KEY = 'speedtest-history';
+const load = () => { try { return JSON.parse(localStorage.getItem(KEY)) || []; } catch (e) { return []; } };
+function saveResult(r) { try { localStorage.setItem(KEY, JSON.stringify([r, ...load()].slice(0, 30))); } catch (e) {} }
+function renderHistory() {
+  const l = load();
+  $('hist').innerHTML = l.length ? l.map(r => {
+    const col = r.ping < 50 ? '#076653' : r.ping < 100 ? '#a87b00' : '#b3261e', n = r.ping < 50 ? 3 : r.ping < 100 ? 2 : 1;
+    return `<li><div><b>↓ ${r.dl.toFixed(2)} · ↑ ${r.ul.toFixed(2)} Mbps</b><small>${new Date(r.t).toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' })} · ${esc(r.isp || 'Unknown ISP')} · ${esc(r.ip || '')}${r.srv ? ' · ' + esc(r.srv) : ''}</small></div>
+    <span class="ms" style="color:${col}">${r.ping.toFixed(0)} ms<i>${[8,12,16].map((h, k) => `<s style="height:${h}px;opacity:${k < n ? 1 : .25}"></s>`).join('')}</i></span></li>`;
+  }).join('') : '<li>No tests yet. Run your first test.</li>';
+}
+$('clear').addEventListener('click', () => { try { localStorage.removeItem(KEY); } catch (e) {} renderHistory(); });
+
+/* ===== Tabs ===== */
+function show(which) {
+  const t = which === 'test';
+  $('view-test').hidden = !t; $('view-hist').hidden = t;
+  $('tab-test').setAttribute('aria-selected', t); $('tab-hist').setAttribute('aria-selected', !t);
+  if (!t) renderHistory();
+}
+$('tab-test').onclick = () => show('test'); $('tab-hist').onclick = () => show('hist');
+
+/* ===== Server picker (Auto = lowest ping) ===== */
+const AUTO = 'auto', status = {};
+async function probe(sv) {
+  let best = Infinity;
+  for (let i = 0; i < 3; i++) {
+    const ac = new AbortController(), to = setTimeout(() => ac.abort(), 3000), s = performance.now();
+    try { const r = await fetch(`${sv.base}/__down?bytes=0&r=${Math.random()}`, { cache: 'no-store', signal: ac.signal }); if (!r.ok) throw 0; await r.arrayBuffer(); if (i) best = Math.min(best, performance.now() - s); }
+    catch (e) { clearTimeout(to); return Infinity; }
+    clearTimeout(to);
+  }
+  return best;
+}
+function pick() {
+  const sel = $('srv').value, online = SERVERS.filter(x => status[x.id] < Infinity);
+  cur = sel === AUTO ? (online.sort((a, b) => status[a.id] - status[b.id])[0] || SERVERS[SERVERS.length - 1]) : SERVERS.find(x => x.id === sel);
+  $('srv-ms').textContent = status[cur.id] < Infinity ? status[cur.id].toFixed(0) + ' ms' : '';
+}
+async function loadServers() {
+  const sel = $('srv'); sel.disabled = true;
+  await Promise.all(SERVERS.map(async x => { status[x.id] = await probe(x); }));
+  sel.innerHTML = `<option value="${AUTO}">Auto (best ping)</option>` + SERVERS.map(x => {
+    const ms = status[x.id], off = ms === Infinity;
+    return `<option value="${x.id}"${off ? ' disabled' : ''}>${esc(x.name)}${off ? ' (offline)' : ' · ' + ms.toFixed(0) + ' ms'}</option>`;
+  }).join('');
+  sel.value = AUTO; sel.disabled = false; pick();
+}
+$('srv').addEventListener('change', pick);
+
+$('yr').textContent = new Date().getFullYear();
+loadServers();
+loadInfo();
+</script>
+</body>
+</html>
